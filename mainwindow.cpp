@@ -122,6 +122,51 @@ void MainWindow::fromAtoInor()
 
 }
 
+bool MainWindow::checkForOriented()
+{
+    for(int i = 0; i < ui->firstMatrix->rowCount(); i++)
+    {
+        for(int j = 0; j < ui->firstMatrix->columnCount(); j++)
+        {
+            if(ui->firstMatrix->item(i,j)->text().toInt() == 1)
+            {
+                bool ok = false;
+                for(int k = 0; k < ui->firstMatrix->rowCount(); k++)
+                {
+                    if(k != i && ui->firstMatrix->item(k,j)->text().toInt() == -1)
+                    {
+                        ok = true;
+                    }
+                }
+                if(!ok)
+                {
+                    QDialog *newDialog = new QDialog;
+                    QMessageBox::warning(newDialog, "Warning", "Your matrix is not from oriented graph");
+                    return false;
+                }
+            }
+            else if(ui->firstMatrix->item(i,j)->text().toInt() == -1)
+            {
+                bool ok = false;
+                for(int k = 0; k < ui->firstMatrix->rowCount(); k++)
+                {
+                    if(k != i && ui->firstMatrix->item(k,j)->text().toInt() == 1)
+                    {
+                        ok = true;
+                    }
+                }
+                if(!ok)
+                {
+                    QDialog *newDialog = new QDialog;
+                    QMessageBox::warning(newDialog, "Warning", "Your matrix is not from oriented graph");
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 void MainWindow::clearSecondMatrix()
 {
     for(int i = 0; i < ui->secondMatrix->rowCount(); i++)
@@ -253,14 +298,20 @@ void MainWindow::on_build_clicked()
     switch (i)
     {
     case 1:
-        fromItoA(-1);
+        if(checkForOriented())
+        {
+            fromItoA(-1);
+        }
         break;
     case 2:
         set1ForNotOriented();
         fromItoA(1);
         break;
     case 3:
-        fromAtoIor();
+        if(checkForOriented())
+        {
+            fromAtoIor();
+        }
         break;
     case 4:
         set1ForNotOriented();
@@ -271,3 +322,4 @@ void MainWindow::on_build_clicked()
     }
     fillMatrixWith0(false);
 }
+
