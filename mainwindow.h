@@ -9,6 +9,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QComboBox>
+#include <QMessageBox>
+#include <QDialog>
 
 namespace Ui {
 class MainWindow;
@@ -32,6 +34,7 @@ public:
     void fillMatrixWith0(bool choice);
     void set1ForNotOriented();
     void clearSecondMatrix();
+    bool checkForOriented();
 
 private slots:
     void on_operation_currentIndexChanged(int index);
@@ -71,3 +74,4 @@ public:
 };
 
 #endif // MAINWINDOW_H
+
