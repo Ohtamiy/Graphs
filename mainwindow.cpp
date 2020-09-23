@@ -51,22 +51,22 @@ void MainWindow::on_operation_currentIndexChanged(int index)
     {
     case 1:
         doDefault12();
-        ui->firstMatrix->setItemDelegate(new DelegateOnlyNumbers);
+        ui->firstMatrix->setItemDelegate(new OrienterIncidence);
 
         break;
     case 2:
         doDefault12();
-        ui->firstMatrix->setItemDelegate(new DelegateOnlyPlus);
+        ui->firstMatrix->setItemDelegate(new NotOrientedIncidence);
 
         break;
     case 3:
         doDefault34();
-        ui->firstMatrix->setItemDelegate(new DelegateOnlyNumbers);
+        ui->firstMatrix->setItemDelegate(new NotAndOrientedAdjacency);
 
         break;
     case 4:
         doDefault34();
-        ui->firstMatrix->setItemDelegate(new DelegateOnlyPlus);
+        ui->firstMatrix->setItemDelegate(new NotAndOrientedAdjacency);
 
         break;
     default:
@@ -114,12 +114,58 @@ void MainWindow::fromItoA(int orient)
 
 void MainWindow::fromAtoIor()
 {
+    int column = 0;
+    for(int i = 0; i < ui->firstMatrix->rowCount(); i++)
+    {
+        for(int j = 0; j < ui->firstMatrix->columnCount(); j++)
+        {
+            if(i == j && ui->firstMatrix->item(i,j)->text().toInt() == 1)
+            {
+                QTableWidgetItem *two = new QTableWidgetItem;
+                two->setText(QString::number(2));
+                ui->secondMatrix->setItem(i,column++,two);
+                continue;
+            }
+            for(int number = ui->firstMatrix->item(i,j)->text().toInt(); number > 0; number--, column++)
+            {
+                QTableWidgetItem *one = new QTableWidgetItem;
+                one->setText(QString::number(1));
+                ui->secondMatrix->setItem(i,column,one);
 
+                QTableWidgetItem *minusone = new QTableWidgetItem;
+                minusone->setText(QString::number(-1));
+                ui->secondMatrix->setItem(j,column,minusone);
+            }
+        }
+    }
 }
 
 void MainWindow::fromAtoInor()
 {
+    int column = 0;
+    for(int i = 0; i < ui->firstMatrix->rowCount(); i++)
+    {
+        for(int j = i; j < ui->firstMatrix->columnCount(); j++)
+        {
+            if(i == j && ui->firstMatrix->item(i,j)->text().toInt() == 1)
+            {
+                QTableWidgetItem *two = new QTableWidgetItem;
+                two->setText(QString::number(2));
+                ui->secondMatrix->setItem(i,column++,two);
+                continue;
+            }
+            for(int number = ui->firstMatrix->item(i,j)->text().toInt(); number > 0; number--, column++)
+            {
+                QTableWidgetItem *one = new QTableWidgetItem;
+                one->setText(QString::number(1));
+                ui->secondMatrix->setItem(i,column,one);
 
+                QTableWidgetItem *otherone = new QTableWidgetItem;
+                otherone->setText(QString::number(1));
+                ui->secondMatrix->setItem(j,column,otherone);
+            }
+        }
+    }
 }
 
 bool MainWindow::checkForOriented()
@@ -288,6 +334,7 @@ void MainWindow::on_clear_clicked()
     ui->operation->setCurrentIndex(0);
     ui->aboveFirstMatrix->clear();
     ui->aboveSecondMatrix->clear();
+    ui->Y->setEnabled(true);
 }
 
 void MainWindow::on_build_clicked()
@@ -304,17 +351,15 @@ void MainWindow::on_build_clicked()
         }
         break;
     case 2:
+        // check for matrix with two 1 in one column at least
         set1ForNotOriented();
         fromItoA(1);
         break;
     case 3:
-        if(checkForOriented())
-        {
-            fromAtoIor();
-        }
+        fromAtoIor();
         break;
     case 4:
-        set1ForNotOriented();
+        // check for symmetric
         fromAtoInor();
         break;
     default:
@@ -322,4 +367,3 @@ void MainWindow::on_build_clicked()
     }
     fillMatrixWith0(false);
 }
-

@@ -47,7 +47,7 @@ private:
     Ui::MainWindow *ui;
 };
 
-class DelegateOnlyPlus: public QItemDelegate
+class NotOrientedIncidence: public QItemDelegate
 {
 public:
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem & option,
@@ -60,7 +60,7 @@ public:
     }
 };
 
-class DelegateOnlyNumbers: public QItemDelegate
+class OrienterIncidence: public QItemDelegate
 {
 public:
     QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem & option,
@@ -73,5 +73,17 @@ public:
     }
 };
 
-#endif // MAINWINDOW_H
+class NotAndOrientedAdjacency: public QItemDelegate
+{
+public:
+    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem & option,
+                          const QModelIndex & index) const
+    {
+        QLineEdit *lineEdit = new QLineEdit(parent);
+        QIntValidator *validator = new QIntValidator(0,INT_MAX, lineEdit);
+        lineEdit->setValidator(validator);
+        return lineEdit;
+    }
+};
 
+#endif // MAINWINDOW_H
