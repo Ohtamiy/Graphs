@@ -11,6 +11,8 @@
 #include <QComboBox>
 #include <QMessageBox>
 #include <QDialog>
+#include <QPainter>
+#include <graphspaintwidget.h>
 
 namespace Ui {
 class MainWindow;
@@ -43,8 +45,12 @@ private slots:
     void on_clear_clicked();
     void on_build_clicked();
 
+    void on_draw_clicked();
+
 private:
     Ui::MainWindow *ui;
+
+    graphsPaintWidget *wgt;
 };
 
 class NotOrientedIncidence: public QItemDelegate

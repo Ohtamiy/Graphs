@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>854</width>
-    <height>627</height>
+    <width>1046</width>
+    <height>636</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,8 +20,8 @@
    <widget class="QComboBox" name="operation">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
+      <x>110</x>
+      <y>130</y>
       <width>311</width>
       <height>31</height>
      </rect>
@@ -55,8 +55,8 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>50</y>
+      <x>490</x>
+      <y>180</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -77,8 +77,8 @@
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>10</y>
+      <x>490</x>
+      <y>130</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -100,7 +100,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>120</y>
+      <y>340</y>
       <width>256</width>
       <height>192</height>
      </rect>
@@ -109,8 +109,8 @@
    <widget class="QTableWidget" name="secondMatrix">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>360</y>
+      <x>380</x>
+      <y>340</y>
       <width>256</width>
       <height>192</height>
      </rect>
@@ -119,8 +119,8 @@
    <widget class="QPushButton" name="clear">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>50</y>
+      <x>350</x>
+      <y>180</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -133,7 +133,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>90</y>
+      <y>310</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -145,8 +145,8 @@
    <widget class="QLabel" name="aboveSecondMatrix">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>330</y>
+      <x>390</x>
+      <y>310</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -158,8 +158,8 @@
    <widget class="QPushButton" name="build">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>50</y>
+      <x>220</x>
+      <y>180</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -168,15 +168,77 @@
      <string>Build</string>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>20</y>
-      <width>256</width>
-      <height>192</height>
+      <x>670</x>
+      <y>320</y>
+      <width>361</width>
+      <height>241</height>
      </rect>
     </property>
+    <layout class="QVBoxLayout" name="graph"/>
+   </widget>
+   <widget class="QPushButton" name="draw">
+    <property name="geometry">
+     <rect>
+      <x>900</x>
+      <y>130</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Draw</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>30</y>
+      <width>230</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QRadioButton" name="oriented_radio">
+       <property name="text">
+        <string>Oriented</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="notoriented_radio">
+       <property name="text">
+        <string>Not-oriented</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_4">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>80</y>
+      <width>206</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>the number of vertices</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="vertice"/>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -184,7 +246,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>854</width>
+     <width>1046</width>
      <height>23</height>
     </rect>
    </property>

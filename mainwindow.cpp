@@ -7,11 +7,20 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    wgt = new graphsPaintWidget(this);
+
+    ui->graph->addWidget(wgt);
 }
 
 MainWindow::~MainWindow()
 {
+    wgt->deleteLater();
     delete ui;
+}
+
+void MainWindow::on_draw_clicked()
+{
+
 }
 
 QStringList MainWindow::createVerticalHeaderLabels()

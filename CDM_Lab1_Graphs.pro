@@ -25,10 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    graphspaintwidget.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    graphspaintwidget.h
 
 FORMS += \
         mainwindow.ui
