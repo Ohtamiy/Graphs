@@ -12,7 +12,7 @@
 #include <QMessageBox>
 #include <QDialog>
 #include <QPainter>
-#include <graphspaintwidget.h>
+#include <graphswidget.h>
 
 namespace Ui {
 class MainWindow;
@@ -26,17 +26,18 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     QStringList createVerticalHeaderLabels();
-    QStringList createHorizontalHeaderLabels();
+    QStringList createHorizontalHeaderLabels(int value);
     void setSizeForTables();
     void doDefault12();
     void doDefault34();
     void fromItoA(int orient);
-    void fromAtoIor();
-    void fromAtoInor();
+    void fromAtoI(int orient);
     void fillMatrixWith0(bool choice);
     void set1ForNotOriented();
     void clearSecondMatrix();
     bool checkForOriented();
+    int countColumns();
+    bool checkForSymmetric();
 
 private slots:
     void on_operation_currentIndexChanged(int index);
@@ -44,13 +45,11 @@ private slots:
     void on_Y_valueChanged();
     void on_clear_clicked();
     void on_build_clicked();
-
     void on_draw_clicked();
 
 private:
     Ui::MainWindow *ui;
-
-    graphsPaintWidget *wgt;
+    graphsWidget *wgt;
 };
 
 class NotOrientedIncidence: public QItemDelegate

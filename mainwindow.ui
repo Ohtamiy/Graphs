@@ -63,7 +63,7 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="y">
        <property name="text">
         <string>Y</string>
        </property>
@@ -171,26 +171,13 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>670</x>
+      <x>660</x>
       <y>320</y>
-      <width>361</width>
+      <width>371</width>
       <height>241</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="graph"/>
-   </widget>
-   <widget class="QPushButton" name="draw">
-    <property name="geometry">
-     <rect>
-      <x>900</x>
-      <y>130</y>
-      <width>71</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Draw</string>
-    </property>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget_3">
     <property name="geometry">
@@ -239,6 +226,19 @@
       <widget class="QSpinBox" name="vertice"/>
      </item>
     </layout>
+   </widget>
+   <widget class="QPushButton" name="draw">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>130</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Draw</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

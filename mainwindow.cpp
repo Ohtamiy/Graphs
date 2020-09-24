@@ -7,8 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    wgt = new graphsPaintWidget(this);
-
+    wgt = new graphsWidget(this);
     ui->graph->addWidget(wgt);
 }
 
@@ -20,7 +19,22 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_draw_clicked()
 {
+    wgt->vertice = ui->vertice->value();
+    wgt->orient = ui->oriented_radio->isChecked() ? true : false;
+    this->update();
+}
 
+int MainWindow::countColumns()
+{
+    int columnCount = 0;
+    for(int i = 0; i < ui->firstMatrix->rowCount(); i++)
+    {
+        for(int j = 0; j < ui->firstMatrix->columnCount(); j++)
+        {
+            columnCount+= ui->firstMatrix->item(i,j)->text().toInt();
+        }
+    }
+    return columnCount;
 }
 
 QStringList MainWindow::createVerticalHeaderLabels()
@@ -33,10 +47,10 @@ QStringList MainWindow::createVerticalHeaderLabels()
     return headers;
 }
 
-QStringList MainWindow::createHorizontalHeaderLabels()
+QStringList MainWindow::createHorizontalHeaderLabels(int value)
 {
     QStringList headers;
-    for(int i = 1; i <= ui->Y->value(); i++)
+    for(int i = 1; i <= value; i++)
     {
         headers << "y" + QString::number(i);
     }
@@ -121,8 +135,10 @@ void MainWindow::fromItoA(int orient)
     }
 }
 
-void MainWindow::fromAtoIor()
+void MainWindow::fromAtoI(int orient)
 {
+    ui->secondMatrix->setColumnCount(countColumns());
+    ui->secondMatrix->setHorizontalHeaderLabels(createHorizontalHeaderLabels(ui->secondMatrix->columnCount()));
     int column = 0;
     for(int i = 0; i < ui->firstMatrix->rowCount(); i++)
     {
@@ -141,37 +157,9 @@ void MainWindow::fromAtoIor()
                 one->setText(QString::number(1));
                 ui->secondMatrix->setItem(i,column,one);
 
-                QTableWidgetItem *minusone = new QTableWidgetItem;
-                minusone->setText(QString::number(-1));
-                ui->secondMatrix->setItem(j,column,minusone);
-            }
-        }
-    }
-}
-
-void MainWindow::fromAtoInor()
-{
-    int column = 0;
-    for(int i = 0; i < ui->firstMatrix->rowCount(); i++)
-    {
-        for(int j = i; j < ui->firstMatrix->columnCount(); j++)
-        {
-            if(i == j && ui->firstMatrix->item(i,j)->text().toInt() == 1)
-            {
-                QTableWidgetItem *two = new QTableWidgetItem;
-                two->setText(QString::number(2));
-                ui->secondMatrix->setItem(i,column++,two);
-                continue;
-            }
-            for(int number = ui->firstMatrix->item(i,j)->text().toInt(); number > 0; number--, column++)
-            {
-                QTableWidgetItem *one = new QTableWidgetItem;
-                one->setText(QString::number(1));
-                ui->secondMatrix->setItem(i,column,one);
-
-                QTableWidgetItem *otherone = new QTableWidgetItem;
-                otherone->setText(QString::number(1));
-                ui->secondMatrix->setItem(j,column,otherone);
+                QTableWidgetItem *oneone = new QTableWidgetItem;
+                oneone->setText(QString::number(orient));
+                ui->secondMatrix->setItem(j,column,oneone);
             }
         }
     }
@@ -216,6 +204,23 @@ bool MainWindow::checkForOriented()
                     QMessageBox::warning(newDialog, "Warning", "Your matrix is not from oriented graph");
                     return false;
                 }
+            }
+        }
+    }
+    return true;
+}
+
+bool MainWindow::checkForSymmetric()
+{
+    for(int i = 0; i < ui->firstMatrix->rowCount(); i++)
+    {
+        for(int j = 0; j < ui->firstMatrix->columnCount(); j++)
+        {
+            if(i != j && ui->firstMatrix->item(i,j) != ui->firstMatrix->item(j,i))
+            {
+                QDialog *newDialog = new QDialog;
+                QMessageBox::warning(newDialog, "Warning", "Your matrix is not symmetric");
+                return false;
             }
         }
     }
@@ -287,7 +292,7 @@ void MainWindow::doDefault12()
 {
     ui->firstMatrix->setColumnCount(ui->Y->value());
     ui->secondMatrix->setColumnCount(ui->X->value());
-    ui->firstMatrix->setHorizontalHeaderLabels(createHorizontalHeaderLabels());
+    ui->firstMatrix->setHorizontalHeaderLabels(createHorizontalHeaderLabels(ui->Y->value()));
     ui->secondMatrix->setHorizontalHeaderLabels(createVerticalHeaderLabels());
     ui->aboveFirstMatrix->setText("Incidence");
     ui->aboveSecondMatrix->setText("Adjacency");
@@ -300,7 +305,7 @@ void MainWindow::doDefault34()
     ui->firstMatrix->setColumnCount(ui->X->value());
     ui->secondMatrix->setColumnCount(ui->Y->value());
     ui->firstMatrix->setHorizontalHeaderLabels(createVerticalHeaderLabels());
-    ui->secondMatrix->setHorizontalHeaderLabels(createHorizontalHeaderLabels());
+    ui->secondMatrix->setHorizontalHeaderLabels(createHorizontalHeaderLabels(ui->Y->value()));
     ui->aboveFirstMatrix->setText("Adjacency");
     ui->aboveSecondMatrix->setText("Incidence");
     ui->secondMatrix->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -344,6 +349,10 @@ void MainWindow::on_clear_clicked()
     ui->aboveFirstMatrix->clear();
     ui->aboveSecondMatrix->clear();
     ui->Y->setEnabled(true);
+    ui->vertice->setValue(0);
+    on_draw_clicked();
+    ui->vertice->clear();
+    this->update();
 }
 
 void MainWindow::on_build_clicked()
@@ -365,11 +374,13 @@ void MainWindow::on_build_clicked()
         fromItoA(1);
         break;
     case 3:
-        fromAtoIor();
+        fromAtoI(-1);
         break;
     case 4:
-        // check for symmetric
-        fromAtoInor();
+        if(checkForSymmetric())
+        {
+            fromAtoI(1);
+        }
         break;
     default:
         break;
