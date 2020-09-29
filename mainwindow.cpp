@@ -7,20 +7,19 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    wgt = new graphsWidget(this);
-    ui->graph->addWidget(wgt);
+    graphButtons = new GraphVisualisingButtons(600, 600, this);
+    graphButtons->setStyleSheet("border: 1px solid red;");
 }
 
 MainWindow::~MainWindow()
 {
-    wgt->deleteLater();
+    //graph->deleteLater();
     delete ui;
 }
 
-void MainWindow::on_draw_clicked()
+void MainWindow::on_vertice_valueChanged(int arg1)
 {
-    wgt->vertice = ui->vertice->value();
-    wgt->orient = ui->oriented_radio->isChecked() ? true : false;
+    on_operation_currentIndexChanged(arg1);
     this->update();
 }
 
@@ -31,7 +30,7 @@ int MainWindow::countColumns()
     {
         for(int j = 0; j < ui->firstMatrix->columnCount(); j++)
         {
-            columnCount+= ui->firstMatrix->item(i,j)->text().toInt();
+            columnCount += ui->firstMatrix->item(i,j)->text().toInt();
         }
     }
     return columnCount;
@@ -59,43 +58,33 @@ QStringList MainWindow::createHorizontalHeaderLabels(int value)
 
 void MainWindow::on_operation_currentIndexChanged(int index)
 {
-    if(index == 0)
-    {
+    if(index == 0){
         on_clear_clicked();
         return;
     }
-
     ui->firstMatrix->setRowCount(ui->X->value());
     ui->secondMatrix->setRowCount(ui->X->value());
     ui->firstMatrix->setVerticalHeaderLabels(createVerticalHeaderLabels());
     ui->secondMatrix->setVerticalHeaderLabels(createVerticalHeaderLabels());
-
     switch (index)
     {
     case 1:
-        doDefault12();
-        ui->firstMatrix->setItemDelegate(new OrienterIncidence);
-
+        if(orient)
+            doDefault12();
+        else
+            doDefault12();
         break;
     case 2:
-        doDefault12();
-        ui->firstMatrix->setItemDelegate(new NotOrientedIncidence);
-
-        break;
-    case 3:
-        doDefault34();
-        ui->firstMatrix->setItemDelegate(new NotAndOrientedAdjacency);
-
-        break;
-    case 4:
-        doDefault34();
-        ui->firstMatrix->setItemDelegate(new NotAndOrientedAdjacency);
-
+        if(orient){
+            doDefault34();
+        }
+        else{
+            doDefault34();
+        }
         break;
     default:
         break;
     }
-
     setSizeForTables();
 }
 
@@ -210,23 +199,6 @@ bool MainWindow::checkForOriented()
     return true;
 }
 
-bool MainWindow::checkForSymmetric()
-{
-    for(int i = 0; i < ui->firstMatrix->rowCount(); i++)
-    {
-        for(int j = 0; j < ui->firstMatrix->columnCount(); j++)
-        {
-            if(i != j && ui->firstMatrix->item(i,j) != ui->firstMatrix->item(j,i))
-            {
-                QDialog *newDialog = new QDialog;
-                QMessageBox::warning(newDialog, "Warning", "Your matrix is not symmetric");
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
 void MainWindow::clearSecondMatrix()
 {
     for(int i = 0; i < ui->secondMatrix->rowCount(); i++)
@@ -290,26 +262,23 @@ void MainWindow::fillMatrixWith0(bool choice)
 
 void MainWindow::doDefault12()
 {
-    ui->firstMatrix->setColumnCount(ui->Y->value());
+    ui->firstMatrix->setColumnCount(ui->vertice->value());
     ui->secondMatrix->setColumnCount(ui->X->value());
-    ui->firstMatrix->setHorizontalHeaderLabels(createHorizontalHeaderLabels(ui->Y->value()));
+    ui->firstMatrix->setHorizontalHeaderLabels(createHorizontalHeaderLabels(ui->vertice->value()));
     ui->secondMatrix->setHorizontalHeaderLabels(createVerticalHeaderLabels());
     ui->aboveFirstMatrix->setText("Incidence");
     ui->aboveSecondMatrix->setText("Adjacency");
     ui->secondMatrix->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->Y->setEnabled(true);
 }
 
 void MainWindow::doDefault34()
 {
     ui->firstMatrix->setColumnCount(ui->X->value());
-    ui->secondMatrix->setColumnCount(ui->Y->value());
     ui->firstMatrix->setHorizontalHeaderLabels(createVerticalHeaderLabels());
-    ui->secondMatrix->setHorizontalHeaderLabels(createHorizontalHeaderLabels(ui->Y->value()));
+    ui->secondMatrix->setHorizontalHeaderLabels(createHorizontalHeaderLabels(ui->vertice->value()));
     ui->aboveFirstMatrix->setText("Adjacency");
     ui->aboveSecondMatrix->setText("Incidence");
     ui->secondMatrix->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->Y->setEnabled(false);
 }
 
 void MainWindow::setSizeForTables()
@@ -333,26 +302,17 @@ void MainWindow::on_X_valueChanged()
     on_operation_currentIndexChanged(ui->operation->currentIndex());
 }
 
-void MainWindow::on_Y_valueChanged()
-{
-    on_operation_currentIndexChanged(ui->operation->currentIndex());
-}
-
 void MainWindow::on_clear_clicked()
 {
     ui->firstMatrix->clear();
     ui->secondMatrix->clear();
     // clear tables with rows and columns ???????
-    ui->X->clear();
-    ui->Y->clear();
+    ui->X->setValue(0);
     ui->operation->setCurrentIndex(0);
     ui->aboveFirstMatrix->clear();
     ui->aboveSecondMatrix->clear();
-    ui->Y->setEnabled(true);
     ui->vertice->setValue(0);
-    on_draw_clicked();
-    ui->vertice->clear();
-    this->update();
+    ui->orientedCheck->setChecked(false);
 }
 
 void MainWindow::on_build_clicked()
@@ -377,13 +337,36 @@ void MainWindow::on_build_clicked()
         fromAtoI(-1);
         break;
     case 4:
-        if(checkForSymmetric())
-        {
-            fromAtoI(1);
-        }
+        fromAtoI(1);
         break;
     default:
         break;
     }
     fillMatrixWith0(false);
+}
+
+void MainWindow::on_orientedCheck_stateChanged(int arg1)
+{
+    Q_UNUSED(arg1);
+    if(ui->orientedCheck->isChecked())
+        orient = true;
+    else
+        orient = false;
+}
+
+void MainWindow::on_firstMatrix_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
+{
+    Q_UNUSED(currentRow);
+    Q_UNUSED(currentColumn);
+    if(orient)
+    {
+        if(previousRow != previousColumn && ui->firstMatrix->item(previousRow,previousColumn))
+        {
+            QTableWidgetItem *symmetricitem = new QTableWidgetItem;
+            symmetricitem->setText(ui->firstMatrix->item(previousRow,previousColumn)->text());
+            if(ui->firstMatrix->item(previousColumn,previousRow))
+                ui->firstMatrix->takeItem(previousColumn,previousRow);
+            ui->firstMatrix->setItem(previousColumn,previousRow,symmetricitem);
+        }
+    }
 }

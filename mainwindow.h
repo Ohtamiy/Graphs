@@ -12,7 +12,8 @@
 #include <QMessageBox>
 #include <QDialog>
 #include <QPainter>
-#include <graphswidget.h>
+#include <graphvisualisingbuttons.h>
+#include <graph.h>
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +24,10 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
+    bool orient;
+    bool getOrient() const { return orient; }
+
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     QStringList createVerticalHeaderLabels();
@@ -37,58 +42,20 @@ public:
     void clearSecondMatrix();
     bool checkForOriented();
     int countColumns();
-    bool checkForSymmetric();
+
 
 private slots:
     void on_operation_currentIndexChanged(int index);
     void on_X_valueChanged();
-    void on_Y_valueChanged();
     void on_clear_clicked();
-    void on_build_clicked();
-    void on_draw_clicked();
+    void on_build_clicked(); 
+    void on_vertice_valueChanged(int arg1);
+    void on_orientedCheck_stateChanged(int arg1);
+    void on_firstMatrix_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
 
 private:
     Ui::MainWindow *ui;
-    graphsWidget *wgt;
-};
-
-class NotOrientedIncidence: public QItemDelegate
-{
-public:
-    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem & option,
-                          const QModelIndex & index) const
-    {
-        QLineEdit *lineEdit = new QLineEdit(parent);
-        QIntValidator *validator = new QIntValidator(0,2, lineEdit);
-        lineEdit->setValidator(validator);
-        return lineEdit;
-    }
-};
-
-class OrienterIncidence: public QItemDelegate
-{
-public:
-    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem & option,
-                          const QModelIndex & index) const
-    {
-        QLineEdit *lineEdit = new QLineEdit(parent);
-        QIntValidator *validator = new QIntValidator(-1,2, lineEdit);
-        lineEdit->setValidator(validator);
-        return lineEdit;
-    }
-};
-
-class NotAndOrientedAdjacency: public QItemDelegate
-{
-public:
-    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem & option,
-                          const QModelIndex & index) const
-    {
-        QLineEdit *lineEdit = new QLineEdit(parent);
-        QIntValidator *validator = new QIntValidator(0,INT_MAX, lineEdit);
-        lineEdit->setValidator(validator);
-        return lineEdit;
-    }
+    GraphVisualisingButtons *graphButtons;
 };
 
 #endif // MAINWINDOW_H
