@@ -26,10 +26,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    node.cpp \
-    edge.cpp \
     graphvisualisingbuttons.cpp \
-    graph.cpp
+    graph.cpp \
+    nodesmap.cpp \
+    edgesmap.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -37,7 +37,9 @@ HEADERS += \
     edge.h \
     namespace.h \
     graphvisualisingbuttons.h \
-    graph.h
+    graph.h \
+    nodesmap.h \
+    edgesmap.h
 
 FORMS += \
         mainwindow.ui

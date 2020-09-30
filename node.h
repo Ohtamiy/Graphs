@@ -9,7 +9,6 @@ class Node
     coordinate x, y;
 
 public:
-    Node();
     Node(id id_, coordinate x, coordinate y){
         this->id_ = id_;
         this->x = x;

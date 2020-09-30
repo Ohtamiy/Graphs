@@ -7,13 +7,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    graphButtons = new GraphVisualisingButtons(600, 600, this);
+    nodes.push_back(Node(0,100,100));
+
+    graphButtons = new GraphVisualisingButtons(nodes, edges, 600, 600, this);
     graphButtons->setStyleSheet("border: 1px solid red;");
 }
 
 MainWindow::~MainWindow()
 {
-    //graph->deleteLater();
+    //graphButtons->deleteLater();
     delete ui;
 }
 

@@ -13,7 +13,6 @@
 #include <QDialog>
 #include <QPainter>
 #include <graphvisualisingbuttons.h>
-#include <graph.h>
 
 namespace Ui {
 class MainWindow;
@@ -24,12 +23,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-
     bool orient;
     bool getOrient() const { return orient; }
 
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
     QStringList createVerticalHeaderLabels();
     QStringList createHorizontalHeaderLabels(int value);
     void setSizeForTables();
@@ -43,6 +39,8 @@ public:
     bool checkForOriented();
     int countColumns();
 
+    explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
 private slots:
     void on_operation_currentIndexChanged(int index);
@@ -56,6 +54,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     GraphVisualisingButtons *graphButtons;
+    NodesMap nodes;
+    EdgesMap edges;
 };
 
 #endif // MAINWINDOW_H
