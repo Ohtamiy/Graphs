@@ -7,7 +7,7 @@
 class EdgesMap : public vector<Edge>
 {
 public:
-
+    id getPos(id id_);
 };
 
 #endif // EDGESMAP_H

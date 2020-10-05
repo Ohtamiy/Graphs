@@ -56,6 +56,7 @@ private:
     GraphVisualisingButtons *graphButtons;
     NodesMap nodes;
     EdgesMap edges;
+
 };
 
 #endif // MAINWINDOW_H

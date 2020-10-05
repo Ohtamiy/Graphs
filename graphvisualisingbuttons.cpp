@@ -4,8 +4,8 @@ GraphVisualisingButtons::~GraphVisualisingButtons(){
     delete graph;
 }
 
-GraphVisualisingButtons::GraphVisualisingButtons(NodesMap nodes, EdgesMap edges, size_t width, size_t height, QWidget *parent) : QLabel(parent){
-    graph = new Graph(nodes,edges,this);
+GraphVisualisingButtons::GraphVisualisingButtons(NodesMap nodes, EdgesMap edges, bool orient, size_t width, size_t height, QWidget *parent) : QLabel(parent){
+    graph = new Graph(nodes,edges,orient,this);
 
     addNodeButton = new QPushButton("Add node", this);
     connect(addNodeButton, &QPushButton::clicked, this, addNodeButtonClicked);
@@ -45,7 +45,7 @@ void GraphVisualisingButtons::addNodeButtonClicked(){
     else
         addNodeButton->setStyleSheet("background-color: white;");
     addNode = !addNode;
-    graph->helper(addNodeButton->text().toStdString());
+    graph->helper(addNodeButton->text());
 }
 
 void GraphVisualisingButtons::addEdgeButtonClicked(){
@@ -59,7 +59,7 @@ void GraphVisualisingButtons::addEdgeButtonClicked(){
     else
         addEdgeButton->setStyleSheet("background-color: white;");
     addEdge = !addEdge;
-    graph->helper(addEdgeButton->text().toStdString());
+    graph->helper(addEdgeButton->text());
 }
 
 void GraphVisualisingButtons::removeNodeButtonClicked(){
@@ -73,7 +73,7 @@ void GraphVisualisingButtons::removeNodeButtonClicked(){
     else
         removeNodeButton->setStyleSheet("background-color: white;");
     removeNode = !removeNode;
-    graph->helper(removeNodeButton->text().toStdString());
+    graph->helper(removeNodeButton->text());
 }
 
 void GraphVisualisingButtons::removeEdgeButtonClicked(){
@@ -87,5 +87,5 @@ void GraphVisualisingButtons::removeEdgeButtonClicked(){
     else
         removeEdgeButton->setStyleSheet("background-color: white;");
     removeEdge = !removeEdge;
-    graph->helper(removeEdgeButton->text().toStdString());
+    graph->helper(removeEdgeButton->text());
 }

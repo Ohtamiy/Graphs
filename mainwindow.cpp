@@ -8,8 +8,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     nodes.push_back(Node(0,100,100));
+    edges.push_back(Edge(0,0,0));
+    orient = false;
 
-    graphButtons = new GraphVisualisingButtons(nodes, edges, 600, 600, this);
+    graphButtons = new GraphVisualisingButtons(nodes, edges, orient, 600, 600, this);
     graphButtons->setStyleSheet("border: 1px solid red;");
 }
 
@@ -22,7 +24,6 @@ MainWindow::~MainWindow()
 void MainWindow::on_vertice_valueChanged(int arg1)
 {
     on_operation_currentIndexChanged(arg1);
-    this->update();
 }
 
 int MainWindow::countColumns()
@@ -350,10 +351,9 @@ void MainWindow::on_build_clicked()
 void MainWindow::on_orientedCheck_stateChanged(int arg1)
 {
     Q_UNUSED(arg1);
-    if(ui->orientedCheck->isChecked())
-        orient = true;
-    else
-        orient = false;
+    orient = ui->orientedCheck->isChecked() ? true : false;
+    graphButtons->graph->setOrient(orient);
+    repaint();
 }
 
 void MainWindow::on_firstMatrix_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)

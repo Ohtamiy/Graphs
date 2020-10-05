@@ -12,6 +12,7 @@
 
 class Graph : public QLabel
 {
+    bool orient;
     NodesMap nodes;
     EdgesMap edges;
     sizeObj sizeOfNode, sizeOfLoop, edgeWidth, loopWidth;
@@ -26,14 +27,20 @@ class Graph : public QLabel
     } state;
 
 public:
-    Graph(NodesMap nodes, EdgesMap edges, QWidget *parent = nullptr);
-    void helper(string button);
+    void setOrient(bool orient) { this->orient = orient; }
+    Graph(NodesMap nodes, EdgesMap edges, bool orient, QWidget *parent = nullptr);
+    void helper(QString button);
     void nodeMoving(int x, int y);
     void nodeAdding(int x, int y);
+    void edgeAdding(int x, int y);
+    void nodeRemoving(int x, int y);
+    void edgeRemoving(int x, int y);
+    void deleteMouseNode();
 
 protected:
     void paintEvent(QPaintEvent *event);
     void mousePressEvent(QMouseEvent *event);
+
 };
 
 #endif // GRAPH_H

@@ -8,13 +8,13 @@
 
 class GraphVisualisingButtons : public QLabel
 {
-    Graph *graph;
     QLabel *buttonsInLabel;
     QHBoxLayout *buttons;
     QPushButton *addNodeButton, *addEdgeButton, *removeNodeButton, *removeEdgeButton;
     bool addNode, addEdge, removeNode, removeEdge;
 public:
-    GraphVisualisingButtons(NodesMap nodes, EdgesMap edges, size_t width, size_t height, QWidget *parent = NULL);
+    Graph *graph;
+    GraphVisualisingButtons(NodesMap nodes, EdgesMap edges, bool orient, size_t width, size_t height, QWidget *parent = NULL);
     ~GraphVisualisingButtons();
 
 private slots:
