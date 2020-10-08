@@ -42,28 +42,6 @@
      </property>
     </item>
    </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>1090</x>
-      <y>20</y>
-      <width>71</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="x">
-       <property name="text">
-        <string>X</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="X"/>
-     </item>
-    </layout>
-   </widget>
    <widget class="QPushButton" name="clear">
     <property name="geometry">
      <rect>
@@ -87,30 +65,8 @@
      </rect>
     </property>
     <property name="text">
-     <string>Build</string>
+     <string>Graph</string>
     </property>
-   </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget_4">
-    <property name="geometry">
-     <rect>
-      <x>620</x>
-      <y>270</y>
-      <width>182</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Amount of vertices</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="vertice"/>
-     </item>
-    </layout>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
@@ -182,6 +138,78 @@
     </property>
     <property name="text">
      <string>Oriented</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>240</y>
+      <width>201</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+    <widget class="QLabel" name="VERTICE">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>124</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Amount of vertice:</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="vertice">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>0</y>
+       <width>51</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="arc">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>30</y>
+       <width>51</width>
+       <height>26</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="ARC">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>30</y>
+       <width>101</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Amount of arc:</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="matrix">
+    <property name="geometry">
+     <rect>
+      <x>1030</x>
+      <y>270</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Matrix</string>
     </property>
    </widget>
   </widget>

@@ -22,34 +22,46 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
+    bool incidence;
     bool orient;
-    bool getOrient() const { return orient; }
 
-    QStringList createVerticalHeaderLabels();
+public:
+    QStringList createVerticalHeaderLabels(int value);
     QStringList createHorizontalHeaderLabels(int value);
     void setSizeForTables();
-    void doDefault12();
-    void doDefault34();
     void fromItoA(int orient);
-    void fromAtoI(int orient);
-    void fillMatrixWith0(bool choice);
-    void set1ForNotOriented();
+    void fromAtoIor();
+    void fromAtoI();
+    void fillFirstMatrix();
+    void fillSecondMatrix();
     void clearSecondMatrix();
-    bool checkForOriented();
+    void clearFirstMatrix();
     int countColumns();
+
+    void receiveNodesMap();
+    void fromAToGraph();
+    void fromAorToGraph();
+    void fromIToGraph();
+    void fromIorToGraph();
+
+    void fromGraphToAor();
+    void fromGraphToA();
+    void fromGraphToIor();
+    void fromGraphToI();
 
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private slots:
     void on_operation_currentIndexChanged(int index);
-    void on_X_valueChanged();
-    void on_clear_clicked();
-    void on_build_clicked(); 
+    void on_arc_valueChanged();
     void on_vertice_valueChanged(int arg1);
+    void on_clear_clicked();
+    void on_build_clicked();
+    void on_matrix_clicked();
     void on_orientedCheck_stateChanged(int arg1);
     void on_firstMatrix_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
+
 
 private:
     Ui::MainWindow *ui;

@@ -7,7 +7,9 @@
 class NodesMap : public vector<Node>
 {
 public:
-    id getPos(id id_);
+    id getPos(const id id_);
+    id newIndex();
+    NodesMap::iterator findToInsert(const id id_);
 };
 
 #endif // NODESMAP_H

@@ -14,13 +14,12 @@ public:
         this->out = out;
     }
 
-    id getId() const { return id_; }
-    id getIn() const { return in; }
-    id getOut() const { return out; }
+    inline id getId() const { return id_; }
+    inline id getIn() const { return in; }
+    inline id getOut() const { return out; }
 
-    void setId(id id_) { this->id_ = id_; }
-    void setIn(id in) { this->in = in; }
-    void setOut(id out) { this->out = out;}
+    inline void setIn(id in) { this->in = in; }
+    inline void setOut(id out) { this->out = out; }
 };
 
 #endif // EDGE_H

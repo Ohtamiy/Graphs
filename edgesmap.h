@@ -7,7 +7,9 @@
 class EdgesMap : public vector<Edge>
 {
 public:
-    id getPos(id id_);
+    id getPos(const id id_);
+    id newIndex();
+    EdgesMap::iterator findToInsert(const id id_);
 };
 
 #endif // EDGESMAP_H

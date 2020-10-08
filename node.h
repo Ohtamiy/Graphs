@@ -16,13 +16,12 @@ public:
     }
 
     // const isn't required but it shows that the method isn't changing class objects
-    id getId() const { return id_; }
-    coordinate getX() const { return x; }
-    coordinate getY() const { return y; }
+    inline id getId() const { return id_; }
+    inline coordinate getX() const { return x; }
+    inline coordinate getY() const { return y; }
 
-    void setId(id id_) { this->id_ = id_; }
-    void setX(coordinate x) { this->x = x; }
-    void setY(coordinate y) { this->y = y; }
+    inline void setX(const coordinate x) { this->x = x; }
+    inline void setY(const coordinate y) { this->y = y; }
 };
 
 #endif // NODE_H

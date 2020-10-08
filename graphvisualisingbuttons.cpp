@@ -9,10 +9,13 @@ GraphVisualisingButtons::GraphVisualisingButtons(NodesMap nodes, EdgesMap edges,
 
     addNodeButton = new QPushButton("Add node", this);
     connect(addNodeButton, &QPushButton::clicked, this, addNodeButtonClicked);
+
     addEdgeButton = new QPushButton("Add edge", this);
     connect(addEdgeButton, &QPushButton::clicked, this, addEdgeButtonClicked);
+
     removeNodeButton = new QPushButton("Remove node", this);
     connect(removeNodeButton, &QPushButton::clicked, this, removeNodeButtonClicked);
+
     removeEdgeButton = new QPushButton("Remove edge", this);
     connect(removeEdgeButton, &QPushButton::clicked, this, removeEdgeButtonClicked);
 
@@ -36,7 +39,7 @@ GraphVisualisingButtons::GraphVisualisingButtons(NodesMap nodes, EdgesMap edges,
 
 void GraphVisualisingButtons::addNodeButtonClicked(){
     if(!addNode){
-        addNodeButton->setStyleSheet("background-color: red;");
+        addNodeButton->setStyleSheet("background-color: silver;");
         addEdgeButton->setStyleSheet("background-color: white;");
         removeNodeButton->setStyleSheet("background-color: white;");
         removeEdgeButton->setStyleSheet("background-color: white;");
@@ -51,7 +54,7 @@ void GraphVisualisingButtons::addNodeButtonClicked(){
 void GraphVisualisingButtons::addEdgeButtonClicked(){
     if(!addEdge){
         addNodeButton->setStyleSheet("background-color: white;");
-        addEdgeButton->setStyleSheet("background-color: red;");
+        addEdgeButton->setStyleSheet("background-color: silver;");
         removeNodeButton->setStyleSheet("background-color: white;");
         removeEdgeButton->setStyleSheet("background-color: white;");
         addNode = removeNode = removeEdge = false;
@@ -66,7 +69,7 @@ void GraphVisualisingButtons::removeNodeButtonClicked(){
     if(!removeNode){
         addNodeButton->setStyleSheet("background-color: white;");
         addEdgeButton->setStyleSheet("background-color: white;");
-        removeNodeButton->setStyleSheet("background-color: red;");
+        removeNodeButton->setStyleSheet("background-color: silver;");
         removeEdgeButton->setStyleSheet("background-color: white;");
         addNode = addEdge = removeEdge = false;
     }
@@ -81,7 +84,7 @@ void GraphVisualisingButtons::removeEdgeButtonClicked(){
         addNodeButton->setStyleSheet("background-color: white;");
         addEdgeButton->setStyleSheet("background-color: white;");
         removeNodeButton->setStyleSheet("background-color: white;");
-        removeEdgeButton->setStyleSheet("background-color: red;");
+        removeEdgeButton->setStyleSheet("background-color: silver;");
         addNode = addEdge = removeNode = false;
     }
     else
