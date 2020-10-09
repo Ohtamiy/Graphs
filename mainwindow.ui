@@ -10,8 +10,23 @@
     <height>604</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1207</width>
+    <height>604</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1207</width>
+    <height>604</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>CDM_Lab1_Graphs</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme=":/new/prefix1/gc_logo.gif"/>
   </property>
   <property name="styleSheet">
    <string notr="true">font: 12pt &quot;Arial&quot;;</string>
@@ -65,7 +80,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Graph</string>
+     <string>ToGraph</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox">
@@ -209,7 +224,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Matrix</string>
+     <string>ToMatrix</string>
     </property>
    </widget>
   </widget>

@@ -197,7 +197,8 @@ void MainWindow::setSizeForTables(){
     ui->secondMatrix->setFixedWidth(ui->secondMatrix->columnWidth(0) * (ui->secondMatrix->columnCount() + 1));
 }
 
-void MainWindow::on_arc_valueChanged(){
+void MainWindow::on_arc_valueChanged(int arg1){
+    Q_UNUSED(arg1);
     on_operation_currentIndexChanged(ui->operation->currentIndex());
 }
 

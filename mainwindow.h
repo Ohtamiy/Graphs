@@ -54,7 +54,7 @@ public:
 
 private slots:
     void on_operation_currentIndexChanged(int index);
-    void on_arc_valueChanged();
+    void on_arc_valueChanged(int arg1);
     void on_vertice_valueChanged(int arg1);
     void on_clear_clicked();
     void on_build_clicked();
