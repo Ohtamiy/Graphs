@@ -14,7 +14,6 @@ public:
         this->x = x;
         this->y = y;
     }
-
     // const isn't required but it shows that the method isn't changing class objects
     inline id getId() const { return id_; }
     inline coordinate getX() const { return x; }

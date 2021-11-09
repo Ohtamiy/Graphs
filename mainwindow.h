@@ -13,7 +13,8 @@
 #include <QDialog>
 #include <QPainter>
 #include <graphvisualisingbuttons.h>
-
+#include <map>
+#include <windows.h>
 namespace Ui {
 class MainWindow;
 }
@@ -21,47 +22,33 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
-    bool incidence;
-    bool orient;
+    vector<pair<int,int>> coordVertice;
 
 public:
-    QStringList createVerticalHeaderLabels(int value);
-    QStringList createHorizontalHeaderLabels(int value);
+    QStringList createVerticalHeaderLabels(int);
+    QStringList createHorizontalHeaderLabels(int);
     void setSizeForTables();
-    void fromItoA(int orient);
-    void fromAtoIor();
-    void fromAtoI();
     void fillFirstMatrix();
-    void fillSecondMatrix();
-    void clearSecondMatrix();
     void clearFirstMatrix();
-    int countColumns();
 
     void receiveNodesMap();
     void fromAToGraph();
-    void fromAorToGraph();
-    void fromIToGraph();
-    void fromIorToGraph();
-
-    void fromGraphToAor();
     void fromGraphToA();
-    void fromGraphToIor();
-    void fromGraphToI();
+    void SetMatrix();
 
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private slots:
-    void on_operation_currentIndexChanged(int index);
-    void on_arc_valueChanged(int arg1);
-    void on_vertice_valueChanged(int arg1);
+    void on_vertice_valueChanged(int);
     void on_clear_clicked();
     void on_build_clicked();
     void on_matrix_clicked();
-    void on_orientedCheck_stateChanged(int arg1);
-    void on_firstMatrix_currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
+    void on_day_pressed();
+    void on_night_clicked();
+    void on_exit_clicked();
 
+    void on_find_clicked();
 
 private:
     Ui::MainWindow *ui;

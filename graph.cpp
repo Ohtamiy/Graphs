@@ -7,10 +7,11 @@ Graph::Graph(NodesMap nodes, EdgesMap edges, bool orient, QWidget *parent) : QLa
     this->nodes = nodes;
     this->edges = edges;
     this->orient = orient;
-    sizeOfNode = 30;
+    sizeOfNode = 13;
     sizeOfLoop = 35;
+    sizeOfNodeNew = 50;
+    sizeOfLoopNew = 55;
     edgeWidth = 3;
-    loopWidth = 5;
     mouseNode = nullptr;
     state = moving;
     timerId = 0;
@@ -19,107 +20,48 @@ Graph::Graph(NodesMap nodes, EdgesMap edges, bool orient, QWidget *parent) : QLa
 void Graph::paintEvent(QPaintEvent *event){
     Q_UNUSED(event);
     QPainter painter(this);
-    QPen penBlue(QBrush(Qt::blue), edgeWidth);
-    QPen penRed(QBrush(Qt::red), edgeWidth);
-    painter.setPen(penBlue);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    foreach (Node node, nodes) {
-        painter.drawEllipse(node.getX() - sizeOfNode / 2, node.getY() - sizeOfNode / 2, sizeOfNode, sizeOfNode);
-        painter.setPen(penRed);
+    QPen penBlue(QBrush(Qt::blue), edgeWidth);
+    QPen penBlack(QBrush(Qt::black), edgeWidth);
+    QPen penMagenta(QBrush(Qt::magenta), edgeWidth);
+    painter.setPen(penBlue);
 
-        painter.drawText(node.getX() + sizeOfNode - 5, node.getY() - sizeOfNode / 2, sizeOfNode / 2, sizeOfNode / 2, Qt::AlignCenter, "x" + QString::number(node.getId() + 1));
+    int i = 0;
+    foreach (Edge edge, edges){   
+        if(edge.getColour())
+            painter.setPen(penMagenta);
+
+        QLineF line;
+        painter.drawLine(nodes[edge.getIn()].getX(), nodes[edge.getIn()].getY(),
+                nodes[edge.getOut()].getX(), nodes[edge.getOut()].getY());
+
+        painter.drawText((nodes[edge.getIn()].getX() + nodes[edge.getOut()].getX()) / 2,
+                (nodes[edge.getIn()].getY() + nodes[edge.getOut()].getY()) / 2,
+                sizeOfNode, sizeOfNode, Qt::AlignCenter, QString::number(edge.getId()));
+
+        line = QLineF(QPointF(nodes[edge.getIn()].getX(),nodes[edge.getIn()].getY()),
+                QPointF(nodes[edge.getOut()].getX(),nodes[edge.getOut()].getY()));
+
+        double angle = ::acos(line.dx() / line.length());
+        if (line.dy() >= 0)
+          angle = TwoPi - angle;
+        QPointF destArrowP1 = QPointF(nodes[edge.getOut()].getX(),nodes[edge.getOut()].getY()) + QPointF(sin(angle - Pi / 3) * 15,
+                                                                                                         cos(angle - Pi / 3) * 15);
+        QPointF destArrowP2 = QPointF(nodes[edge.getOut()].getX(),nodes[edge.getOut()].getY()) + QPointF(sin(angle - Pi + Pi / 3) * 15,
+                                                                                                         cos(angle - Pi + Pi / 3) * 15);
+        painter.drawPolygon(QPolygonF() << line.p2() << destArrowP1 << destArrowP2);
+
         painter.setPen(penBlue);
     }
 
-    EdgesMap nedges;
-
-    foreach (Edge edge, edges) {
-        if(orient){
-            QLineF line;
-            if(edge.getIn() == edge.getOut())
-                line = QLineF(QPointF(nodes[edge.getOut()].getX()+5,nodes[edge.getOut()].getY() - 50), QPointF(nodes[edge.getOut()].getX()+5,nodes[edge.getOut()].getY() - 30));
-            else
-                line = QLineF(QPointF(nodes[edge.getIn()].getX(),nodes[edge.getIn()].getY()), QPointF(nodes[edge.getOut()].getX(),nodes[edge.getOut()].getY()));
-
-            double angle = ::acos(line.dx() / line.length());
-            if (line.dy() >= 0)
-              angle = TwoPi - angle;
-
-            QPointF destArrowP1 = QPointF(nodes[edge.getOut()].getX(),nodes[edge.getOut()].getY()) + QPointF(sin(angle - Pi / 3) * 15,
-                                                                                                             cos(angle - Pi / 3) * 15);
-            QPointF destArrowP2 = QPointF(nodes[edge.getOut()].getX(),nodes[edge.getOut()].getY()) + QPointF(sin(angle - Pi + Pi / 3) * 15,
-                                                                                                             cos(angle - Pi + Pi / 3) * 15);
-
-            painter.setPen(penRed);
-            painter.drawPolygon(QPolygonF() << line.p2() << destArrowP1 << destArrowP2);
-            painter.setPen(penBlue);
-        }
-
-        int i = 0;
-        int hei = 15;
-        if(edge.getIn() == edge.getOut()){
-            painter.drawArc(nodes[edge.getIn()].getX() - sizeOfNode, nodes[edge.getIn()].getY() - sizeOfNode, sizeOfLoop, sizeOfLoop, 10 * 16, 245 * 16);
-            painter.setPen(penRed);
-            painter.drawText(nodes[edge.getOut()].getX() - 50, nodes[edge.getOut()].getY() - 50,
-                    sizeOfNode, sizeOfNode, Qt::AlignCenter, "y" + QString::number(edge.getId() + 1));
-            painter.setPen(penBlue);
-        }
-        else{
-            for(int j = edges.getPos(edge.getId()) + 1; j < (int)edges.size(); j++){
-                if((edge.getIn() == edges.at(j).getIn() && edge.getOut() == edges.at(j).getOut()) ||
-                   (edge.getIn() == edges.at(j).getOut() && edge.getOut() == edges.at(j).getIn())){
-                    QPainterPath path;
-
-                    path.moveTo(nodes[edges.at(j).getIn()].getX(), nodes[edges.at(j).getIn()].getY());
-                    if(i % 2 == 0){
-                        path.cubicTo(nodes[edges.at(j).getIn()].getX(), nodes[edges.at(j).getIn()].getY(),
-                                    (nodes[edges.at(j).getIn()].getX() + nodes[edges.at(j).getOut()].getX()) / 2 + hei,
-                                    (nodes[edges.at(j).getIn()].getY() + nodes[edges.at(j).getOut()].getY()) / 2 + hei,
-                                    nodes[edges.at(j).getOut()].getX(), nodes[edges.at(j).getOut()].getY());
-
-                        painter.setPen(penRed);
-                        painter.drawText((nodes[edges.at(j).getIn()].getX() + nodes[edges.at(j).getOut()].getX()) / 2 + hei,
-                                        (nodes[edges.at(j).getIn()].getY() + nodes[edges.at(j).getOut()].getY()) / 2 + hei,
-                                        sizeOfNode + 10, sizeOfNode + 10, Qt::AlignCenter, "y" + QString::number(edges.at(j).getId() + 1));
-                    }
-                    else{
-                        path.cubicTo(nodes[edges.at(j).getIn()].getX(), nodes[edges.at(j).getIn()].getY(),
-                                    (nodes[edges.at(j).getIn()].getX() + nodes[edges.at(j).getOut()].getX()) / 2 - hei,
-                                    (nodes[edges.at(j).getIn()].getY() + nodes[edges.at(j).getOut()].getY()) / 2 - hei,
-                                    nodes[edges.at(j).getOut()].getX(), nodes[edges.at(j).getOut()].getY());
-
-                        painter.setPen(penRed);
-                        painter.drawText((nodes[edges.at(j).getIn()].getX() + nodes[edges.at(j).getOut()].getX()) / 2 - hei,
-                                        (nodes[edges.at(j).getIn()].getY() + nodes[edges.at(j).getOut()].getY()) / 2 - hei,
-                                        sizeOfNode - 10, sizeOfNode - 10, Qt::AlignCenter, "y" + QString::number(edges.at(j).getId() + 1));
-                    }
-                    painter.setPen(penRed);
-                    painter.drawPath(path);
-                    painter.setPen(penBlue);
-
-                    hei+=15;
-                    i++;
-
-                    nedges.push_back(edges.at(j));
-                    edges.erase(edges.begin() + edges.getPos(edges.at(j).getId()));
-                }
-            }
-
-            painter.drawLine(nodes[edge.getIn()].getX(), nodes[edge.getIn()].getY(),
-                            nodes[edge.getOut()].getX(), nodes[edge.getOut()].getY());
-            painter.setPen(penRed);
-
-            painter.drawText((nodes[edge.getIn()].getX() + nodes[edge.getOut()].getX()) / 2,
-                            (nodes[edge.getIn()].getY() + nodes[edge.getOut()].getY()) / 2,
-                            sizeOfNode + 10, sizeOfNode + 10, Qt::AlignCenter, "y" + QString::number(edge.getId() + 1));
-            painter.setPen(penBlue);
-        }
+    painter.setPen(penBlack);
+    painter.setBrush(Qt::black);
+    i = 0;
+    foreach (Node node, nodes) {
+        painter.drawEllipse(node.getX() - sizeOfNode / 2, node.getY() - sizeOfNode / 2, sizeOfNode, sizeOfNode);
+        painter.drawText(node.getX() + sizeOfNode - 5, node.getY() - sizeOfNode / 2, 30 + 2, 30 + 2, Qt::AlignCenter, "x" + QString::number(++i));
     }
-
-    foreach (Edge edge, nedges)
-        edges.insert(edges.findToInsert(edges.newIndex()),edge);
-    nedges.clear();
 }
 
 void Graph::mousePressEvent(QMouseEvent *event){
@@ -156,11 +98,12 @@ void Graph::mouseReleaseEvent(QMouseEvent *ev){
 void Graph::timerEvent(QTimerEvent *event){
     Q_UNUSED(event);
 
-    QCursor cursor;
-
-    int pos = nodes.getPos(mouseNode->getId());
-    nodes[pos].setX(cursor.pos().x() - 350);
-    nodes[pos].setY(cursor.pos().y() - 225);
+    if(mouseNode){
+        QCursor cursor;
+        int pos = nodes.getPos(mouseNode->getId());
+        nodes[pos].setX(cursor.pos().x() - 400);
+        nodes[pos].setY(cursor.pos().y() - 225);
+    }
 
     repaint();
 }
@@ -224,7 +167,7 @@ void Graph::edgeAdding(int x, int y){
                             break;
                         }
                 if(!ok)
-                    edges.insert(edges.findToInsert(edges.newIndex()),Edge(edges.newIndex(), mouseNode->getId(), node.getId()));
+                    edges.insert(edges.findToInsert(edges.newIndex()),Edge(edges.newIndex(), mouseNode->getId(), node.getId(), 0));
                 deleteMouseNode();
                 break;
             }

@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/new/prefix1">
-        <file>gc_logo.gif</file>
+    <qresource prefix="/">
+        <file>gc_logo.png</file>
     </qresource>
 </RCC>

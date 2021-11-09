@@ -9,14 +9,16 @@
 #include <node.h>
 #include <nodesmap.h>
 #include <edgesmap.h>
-#include <QDebug>
+#include <QPainterPath>
+#include <cmath>
 
 class Graph : public QLabel
 {
     bool orient;
     NodesMap nodes;
     EdgesMap edges;
-    sizeObj sizeOfNode, sizeOfLoop, edgeWidth, loopWidth;
+    sizeObj sizeOfNode, sizeOfLoop, edgeWidth, sizeOfNodeNew, sizeOfLoopNew;
+
     Node *mouseNode;
     enum mouse{
         none,
@@ -26,6 +28,8 @@ class Graph : public QLabel
         NodeRemoving,
         EdgeRemoving
     } state;
+
+    int timerId;
 
 public:
     inline NodesMap getNodesMap() const { return nodes; }
@@ -50,8 +54,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *ev);
     void timerEvent(QTimerEvent *event);
 
-private:
-    int timerId;
 };
 
 #endif // GRAPH_H
