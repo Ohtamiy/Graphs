@@ -2,7 +2,7 @@
 The project was made to show main properties of graphs.
 Here you can point the place where to put nodes.
 Also you can grab nodes and put them to other place.
-You can choose orientation of graph edges and build related matrix
+You can choose orientation of graph edges and build related matrix\n
 
 Common usage
 ![image](https://user-images.githubusercontent.com/63428239/140909095-24ada16e-0930-4444-b3da-06c8cde10fa5.png)
