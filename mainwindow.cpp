@@ -200,6 +200,137 @@ void MainWindow::on_night_clicked(){
 void MainWindow::on_exit_clicked(){
     close();
 }
+
+// --------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------
+// ------------------------- Paint nodes and edges --------------------------------------
+void MainWindow::on_paintVertice_clicked(){
+    vector <short> result;
+    short color = 0;
+    for(short i = 0; i < ui->firstMatrix->rowCount(); i++){
+        bool colour = 0, adj = 0;
+        for(short j = 0; j < (int)result.size(); j++){
+            if(ui->firstMatrix->item(i,j)->text().toInt() == 0){
+                for(int h = 0; h < (int)result.size(); h++){
+                    if(j != h && result.at(j) == result.at(h) && ui->firstMatrix->item(i,h)->text().toInt() != 0){
+                        adj = 1;
+                    }
+                }
+                if(!adj){
+                    result.push_back(result.at(j));
+                    colour = 1;
+                    break;
+                }
+            }
+            if(j + 1 < (int)result.size())
+                adj = 0;
+        }
+        if(!colour)
+            result.push_back(color++);
+    }
+
+    QString res;
+    for(int i = 0; i < (int)result.size(); i++)
+        res += QString::number(result.at(i)+1) + "  ";
+    ui->result->setText(res);
+
+    NodesMap paintVertice;
+    short u = 0;
+    foreach(Node node, graphButtons->graph->getNodesMap()){
+        paintVertice.push_back(Node(result.at(u++),node.getX(), node.getY()));
+    }
+    graphButtons->graph->setNodesMap(paintVertice);
+    graphButtons->graph->setOrient(1);
+    repaint();
+}
+
+void MainWindow::on_paintEdges_clicked(){
+    EdgesMap paintEdges;
+
+    short color = 0;
+    for(short i = 0; i < ui->firstMatrix->rowCount(); i++){
+        for(short j = i + 1; j < ui->firstMatrix->rowCount(); j++){
+            short number = ui->firstMatrix->item(i,j)->text().toInt();
+            while(number != 0){
+                vector<pair<int,int>> colorVertice;
+
+                for(int h = 0; h <= j; h++){
+                    int n = ui->firstMatrix->item(i,h)->text().toInt();
+                    if(h == j)
+                        n = ui->firstMatrix->item(i,h)->text().toInt() - 1;
+                    if(n > 0){
+                        colorVertice.push_back({i,h});
+                        n--;
+                    }
+                }
+
+                for(int h = 0; h <= i; h++){
+                    int n = ui->firstMatrix->item(h,j)->text().toInt();
+                    if(h == i)
+                        n = ui->firstMatrix->item(h,j)->text().toInt() - 1;
+                    if(n > 0){
+                        colorVertice.push_back({h,j});
+                        n--;
+                    }
+                }
+
+                vector<int> colors;
+
+                foreach (Edge edge, paintEdges) {
+                    for(auto f = colorVertice.begin(); f != colorVertice.end(); f++){
+                        if((edge.getIn() == f->first && edge.getOut() == f->second) ||
+                           (edge.getIn() == f->second && edge.getOut() == f->first)){
+                            colors.push_back(edge.getId());
+                        }
+                    }
+                }
+
+                bool ok = 0, ok1 = 0;
+                for(int f = 0; f < color; f++){
+                    foreach (int c, colors) {
+                        if(c == f){
+                            ok = 1;
+                            break;
+                        }
+                    }
+                    if(!ok){
+                        paintEdges.push_back(Edge(f,i,j));
+                        ok1 = 1;
+                        break;
+                    }
+                    if(f + 1 != color)
+                        ok = 0;
+                }
+
+                if(!ok1)
+                    paintEdges.push_back(Edge(color++,i,j));
+                number--;
+
+                colorVertice.clear();
+                colors.clear();
+            }
+        }
+    }
+
+    QString res;
+    foreach(Edge edge, paintEdges)
+        res += QString::number(edge.getId()+1) + "  ";
+    ui->result->setText(res);
+
+    graphButtons->graph->setEdgesMap(paintEdges);
+    graphButtons->graph->setOrient(0);
+    repaint();
+
+    clearFirstMatrix();
+    fillFirstMatrix();
+    fromGraphToA();
+}
+
+// --------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------
+// ------------------------- Finding minimal way ----------------------------------------
 void MainWindow::on_find_clicked(){
     int start = ui->start->value()-1, size = ui->firstMatrix->columnCount();
     const int inf = 10000000;
@@ -234,7 +365,7 @@ void MainWindow::on_find_clicked(){
             result += " - ";
     }
     result += " = " + QString::number(v[ui->end->value()-1]);
-    ui->result->setText(result);//�� �뢮�
+    ui->result->setText(result);//íâ® ¢ë¢®¤
 
     on_build_clicked();
 
@@ -260,5 +391,185 @@ void MainWindow::on_find_clicked(){
     }
 
     graphButtons->graph->setEdgesMap(pain);
+    repaint();
+}
+// --------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------
+// ------------------------- Breath and depth search ------------------------------------
+void MainWindow::fill(int x, int k, vector<int> &arr){
+    for(int i = 0; i < (int)arr.size();i++)
+        if(ui->firstMatrix->item(x,i)->text().toInt() != 0 && arr[i] == -1)
+            arr[i] = k;
+}
+
+void MainWindow::on_breadth_first_search_clicked(){
+    on_build_clicked();
+    vector<int> arr(ui->firstMatrix->rowCount());
+    for(int i = 0; i < ui->firstMatrix->rowCount(); i++)
+        arr[i] = -1;
+
+    int k = 0;
+    arr[ui->start->value()-1] = k++;
+    fill(ui->start->value()-1,k,arr);
+
+    for(int j = 0; j < ui->firstMatrix->rowCount(); j++){
+        for(int j = 0; j < ui->firstMatrix->rowCount(); j++)
+            if(arr[j] == k)
+                fill(j,k+1,arr);
+        k++;
+    }
+
+    QString result;
+    NodesMap paintVertice;
+    for(int i = 0; i < ui->firstMatrix->rowCount(); i++){
+        paintVertice.push_back(Node(arr[i], graphButtons->graph->getNodesMap().at(i).getX(), graphButtons->graph->getNodesMap().at(i).getY()));
+        result += "x" + QString::number(i+1) + ": " + QString::number(arr[i]) + "  ";
+    }
+    ui->result->setText(result);
+    graphButtons->graph->setNodesMap(paintVertice);
+    graphButtons->graph->setOrient(1);
+    repaint();
+}
+
+int MainWindow::findMinD(int x, int arr[]) {
+    for(int j = 0; j < ui->firstMatrix->rowCount(); j++)
+        if(ui->firstMatrix->item(x,j)->text().toInt() != 0 && arr[j] == 0)
+            return j;
+    return -1;
+}
+
+void MainWindow::on_depth_first_search_clicked(){
+    on_build_clicked();
+    EdgesMap painted;
+    int *arr = new int[ui->firstMatrix->rowCount()]();
+    int k = 1, x = ui->start->value()-1;
+    arr[x] = k++;
+
+    stack<int> checked;
+    checked.push(x);
+
+    for(int i = 0, min = 0, temp = 0; i < ui->firstMatrix->rowCount(); i++, k++){
+        min = findMinD(x, arr);
+        while(min == -1 && !checked.empty()){
+            temp = checked.top();
+            checked.pop();
+            min = findMinD(temp, arr);
+        }
+        if(min != -1){
+            painted.push_back(Edge(1, graphButtons->graph->getNodesMap().at(x).getId(), graphButtons->graph->getNodesMap().at(min).getId()));
+            x = min;
+            arr[x] = k;
+            checked.push(x);
+        }
+    }
+
+    if((int)painted.size() < ui->firstMatrix->rowCount() - 1)
+        ui->result->setText("Can't find depth from this vertice");
+    else{
+        foreach (Edge edge, graphButtons->graph->getEdgesMap()) {
+            bool ok = 0;
+            foreach (Edge colored, painted) {
+                if((edge.getIn() == colored.getIn() && edge.getOut() == colored.getOut()) ||
+                   (edge.getIn() == colored.getOut() && edge.getOut() == colored.getIn()))
+                    ok = 1;
+            }
+            if(!ok)
+                painted.push_back(Edge(0,edge.getIn(),edge.getOut()));
+        }
+
+        QString result;
+        NodesMap paintVertice;
+        for(int i = 0; i < ui->firstMatrix->rowCount(); i++){
+            paintVertice.push_back(Node(arr[i], graphButtons->graph->getNodesMap().at(i).getX(), graphButtons->graph->getNodesMap().at(i).getY()));
+            result += "x" + QString::number(i+1) + ": " + QString::number(arr[i]) + "  ";
+        }
+        ui->result->setText(result);
+        graphButtons->graph->setEdgesMap(painted);
+        graphButtons->graph->setNodesMap(paintVertice);
+        graphButtons->graph->setOrient(1);
+        repaint();
+    }
+}
+
+// --------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------
+// ------------------------- Building spanning tree -------------------------------------
+void MainWindow::findMin(vector<vector<int>> &matrix, int n, int &x, int &y, int &min){
+    min = 225;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            if(matrix[i][j] < min && matrix[i][j] != 0){
+                min = matrix[i][j];
+                x = i;
+                y = j;
+            }
+        }
+    }
+}
+void MainWindow::fillMin(vector<vector<int>> &matrix,int x, int y){
+    matrix[x][y] = 0;
+    matrix[y][x] = 0;
+}
+void MainWindow::addColumn(vector<vector<int>> &matrix,int y, int n, vector<int> &col){
+    for(int i = 0; i < n;i++){
+        matrix[i][y] = ui->firstMatrix->item(i,y)->text().toInt();
+    }
+    col.push_back(y);
+}
+bool MainWindow::isEmpty(vector<int> col, int y){
+    int n = col.size();
+    for(int i = 0; i < n;i++){
+        if(col[i] == y)
+            return false;
+    }
+    return true;
+}
+
+void MainWindow::on_find_clicked()
+{
+    vector<int> column;
+    EdgesMap paintEdges;
+    QString result;
+    int x = 0, y = 0, min = 225, n = ui->firstMatrix->rowCount(), count = n - 1;
+    vector<vector<int>> matrix(n, vector<int>(n));
+
+    fillFirstMatrix();//копирую матрицы
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            matrix[i][j] = ui->firstMatrix->item(i,j)->text().toInt();
+        }
+    }
+    findMin(matrix, n, x, y, min);//нахожу минимальное значение
+    paintEdges.push_back(Edge(ui->firstMatrix->item(x,y)->text().toInt(),x,y));
+
+    result += QString::number(min) + " ";
+
+    for(int i = 0; i < n; i++){//очищаю матрицу
+        for(int j = 0; j < n; j++){
+                matrix[i][j] = 0;
+        }
+    }
+    //заполняю двумя начальными столбиками
+    addColumn(matrix, y, n, column);
+    addColumn(matrix, x, n, column);
+    count-=1;
+
+    while(count != 0){
+        do{
+            fillMin(matrix, x, y);
+            findMin(matrix, n, x, y, min);
+        }while(!isEmpty(column, x));
+        paintEdges.push_back(Edge(ui->firstMatrix->item(x,y)->text().toInt(),x,y));
+        result += QString::number(min) + "   ";
+        addColumn(matrix, x, n, column);
+        count--;
+    }
+    matrix.clear();
+    ui->result->setText(result);
+
+    graphButtons->graph->setEdgesMap(paintEdges);
+    graphButtons->graph->setOrient(0);
     repaint();
 }
