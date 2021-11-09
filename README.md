@@ -1,4 +1,4 @@
-# CDM_Lab1_Graphs
+# Graphs
 The project was made to show main properties of graphs.
 Here you can point the place where to put nodes.
 Also you can grab nodes and put them to other place.
